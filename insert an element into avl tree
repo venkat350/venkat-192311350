@@ -1,0 +1,21 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int key;
+    struct Node *left;
+    struct Node *right;
+    int height;
+};
+
+int max(int a, int b);
+int height(struct Node *N);
+struct Node *newNode(int key);
+struct Node *rightRotate(struct Node *y);
+struct Node *leftRotate(struct Node *x);
+int getBalance(struct Node *N);
+struct Node *insertNode(struct Node *node, int key);
+
+struct Node *deleteNode(struct Node *root, int key);
+struct Node *minValueNode(struct Node *node);
+struct Node *search(struct Node *root, int key);
