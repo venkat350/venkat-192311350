@@ -1,0 +1,58 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct Node {
+    char data;
+    struct Node* next;
+};
+
+struct Node* newNode(char data) {
+    struct Node* node = (struct Node*)malloc(sizeof(struct Node));
+    node->data = data;
+    node->next = NULL;
+    return node;
+}
+
+void insert(struct Node** head, char data) {
+    struct Node* new_node = newNode(data);
+    new_node->next = *head;
+    *head = new_node;
+}
+
+int isPalindrome(struct Node* head) {
+    struct Node* current = head;
+    int length = 0;
+    char arr[100];
+
+    while (current != NULL) {
+        arr[length] = current->data;
+        current = current->next;
+        length++;
+    }
+
+    for (int i = 0; i < length / 2; i++) {
+        if (arr[i] != arr[length - i - 1]) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+int main() {
+    struct Node* head = NULL;
+    char str[] = "madam";
+    int i;
+
+    for (i = 0; str[i] != '\0'; i++) {
+        insert(&head, str[i]);
+    }
+
+    if (isPalindrome(head)) {
+        printf("Palindrome");
+    } else {
+        printf("Not a Palindrome");
+    }
+
+    return 0;
+}
