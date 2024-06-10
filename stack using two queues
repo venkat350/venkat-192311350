@@ -1,0 +1,83 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Queue {
+    int front, rear, size;
+    unsigned capacity;
+    int* array;
+};
+
+struct Queue* createQueue(unsigned capacity) {
+    struct Queue* queue = (struct Queue*)malloc(sizeof(struct Queue));
+    queue->capacity = capacity;
+    queue->front = queue->size = 0;
+    queue->rear = capacity - 1;
+    queue->array = (int*)malloc(queue->capacity * sizeof(int));
+    return queue;
+}
+
+int isEmpty(struct Queue* queue) {
+    return (queue->size == 0);
+}
+
+void enqueue(struct Queue* queue, int item) {
+    queue->rear = (queue->rear + 1) % queue->capacity;
+    queue->array[queue->rear] = item;
+    queue->size = queue->size + 1;
+}
+
+int dequeue(struct Queue* queue) {
+    int item = queue->array[queue->front];
+    queue->front = (queue->front + 1) % queue->capacity;
+    queue->size = queue->size - 1;
+    return item;
+}
+
+struct Stack {
+    struct Queue* queue1;
+    struct Queue* queue2;
+};
+
+struct Stack* createStack() {
+    struct Stack* stack = (struct Stack*)malloc(sizeof(struct Stack));
+    stack->queue1 = createQueue(100);
+    stack->queue2 = createQueue(100);
+    return stack;
+}
+
+void push(struct Stack* stack, int item) {
+    enqueue(stack->queue2, item);
+    while (!isEmpty(stack->queue1)) {
+        enqueue(stack->queue2, dequeue(stack->queue1));
+    }
+    struct Queue* temp = stack->queue1;
+    stack->queue1 = stack->queue2;
+    stack->queue2 = temp;
+}
+
+int pop(struct Stack* stack) {
+    if (isEmpty(stack->queue1)) {
+        return -1;
+    }
+    return dequeue(stack->queue1);
+}
+
+int top(struct Stack* stack) {
+    if (isEmpty(stack->queue1)) {
+        return -1;
+    }
+    return stack->queue1->array[stack->queue1->front];
+}
+
+int main() {
+    struct Stack* stack = createStack();
+    push(stack, 10);
+    push(stack, 20);
+    push(stack, 30);
+
+    printf("Top element is %d\n", top(stack));
+    printf("Popped element is %d\n", pop(stack));
+    printf("Top element is %d\n", top(stack));
+
+    return 0;
+}
